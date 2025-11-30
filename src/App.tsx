@@ -144,6 +144,7 @@ export default function App() {
   const [isAuthDialogOpen, setAuthDialogOpen] = useState(false);
   const [pendingPage, setPendingPage] = useState<Page | null>(null);
   const [authRoleHint, setAuthRoleHint] = useState<UserRole>("customer");
+  const [authAllowedRoles, setAuthAllowedRoles] = useState<UserRole[] | undefined>();
 
   useEffect(() => {
     if (!hasWindow()) return;
@@ -177,10 +178,12 @@ export default function App() {
 
   const requestAuth = (
     role: UserRole = "customer",
-    page: Page | null = null
+    page: Page | null = null,
+    allowedRoles?: UserRole[]
   ) => {
     setAuthRoleHint(role);
     setPendingPage(page);
+    setAuthAllowedRoles(allowedRoles);
     setAuthDialogOpen(true);
   };
 
@@ -190,7 +193,7 @@ export default function App() {
 
     if (requiredRole && user?.role !== requiredRole) {
       toast.error(`Please sign in as a ${requiredRole} to access this area.`);
-      requestAuth(requiredRole, targetPage);
+      requestAuth(requiredRole, targetPage, [requiredRole]);
       return;
     }
 
@@ -457,6 +460,7 @@ export default function App() {
         onOpenChange={setAuthDialogOpen}
         defaultRole={authRoleHint}
         onSubmit={handleAuthSubmit}
+        allowedRoles={authAllowedRoles}
       />
     </>
   );
