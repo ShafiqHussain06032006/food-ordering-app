@@ -16,6 +16,7 @@ interface AuthDialogProps {
   onOpenChange: (open: boolean) => void;
   defaultRole?: UserRole;
   onSubmit: (session: UserSession) => void;
+  allowedRoles?: UserRole[];
 }
 
 const roleCopy: Record<UserRole, string> = {
@@ -29,6 +30,7 @@ export function AuthDialog({
   onOpenChange,
   defaultRole = "customer",
   onSubmit,
+  allowedRoles,
 }: AuthDialogProps) {
   const [name, setName] = useState("");
   const [role, setRole] = useState<UserRole>(defaultRole);
@@ -80,22 +82,30 @@ export function AuthDialog({
               required
             />
           </div>
-
           <div>
             <Label htmlFor="auth-role" className="text-[#333333]">
               Sign in as
             </Label>
-            <select
-              id="auth-role"
-              value={role}
-              onChange={(event) => setRole(event.target.value as UserRole)}
-              className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#FF8C00]"
-            >
-              <option value="customer">Customer</option>
-              <option value="vendor">Vendor</option>
-              <option value="admin">Admin</option>
-            </select>
-            <p className="mt-2 text-sm text-[#666666]">{roleCopy[role]}</p>
+            {allowedRoles && allowedRoles.length === 1 ? (
+              <div className="mt-2 p-3 rounded-md bg-gray-100 text-[#333333]">
+                <p className="font-medium">{allowedRoles[0].charAt(0).toUpperCase() + allowedRoles[0].slice(1)}</p>
+                <p className="mt-2 text-sm text-[#666666]">{roleCopy[allowedRoles[0]]}</p>
+              </div>
+            ) : (
+              <>
+                <select
+                  id="auth-role"
+                  value={role}
+                  onChange={(event) => setRole(event.target.value as UserRole)}
+                  className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-[#333333] focus:outline-none focus:ring-2 focus:ring-[#FF8C00]"
+                >
+                  {(!allowedRoles || allowedRoles.includes("customer")) && <option value="customer">Customer</option>}
+                  {(!allowedRoles || allowedRoles.includes("vendor")) && <option value="vendor">Vendor</option>}
+                  {(!allowedRoles || allowedRoles.includes("admin")) && <option value="admin">Admin</option>}
+                </select>
+                <p className="mt-2 text-sm text-[#666666]">{roleCopy[role]}</p>
+              </>
+            )}
           </div>
 
           <Button
