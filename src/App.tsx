@@ -387,37 +387,43 @@ export default function App() {
               </Button>
             </div>
 
-            <div className="pt-6 border-t border-white/20">
-              <p className="text-sm text-white/70 mb-4">Access Portal For:</p>
-              <div className="flex items-center justify-center gap-4 flex-wrap">
-                <Button
-                  onClick={() => handleNavigate("vendor-home")}
-                  variant="outline"
-                  className="border-white/60 text-white hover:bg-white hover:text-[#FF8C00] px-6 py-6 rounded-lg backdrop-blur-sm bg-white/10 flex items-center gap-2"
-                >
-                  <Store className="w-5 h-5" />
-                  <div className="flex flex-col items-start">
-                    <span>Vendor Dashboard</span>
-                    <span className="text-xs text-white/80">
-                      Manage your restaurant
-                    </span>
-                  </div>
-                </Button>
-                <Button
-                  onClick={() => handleNavigate("admin")}
-                  variant="outline"
-                  className="border-white/60 text-white hover:bg-white hover:text-[#FF8C00] px-6 py-6 rounded-lg backdrop-blur-sm bg-white/10 flex items-center gap-2"
-                >
-                  <Shield className="w-5 h-5" />
-                  <div className="flex flex-col items-start">
-                    <span>Admin Dashboard</span>
-                    <span className="text-xs text-white/80">
-                      Platform management
-                    </span>
-                  </div>
-                </Button>
+            {(user?.role === "vendor" || user?.role === "admin") && (
+              <div className="pt-6 border-t border-white/20">
+                <p className="text-sm text-white/70 mb-4">Access Portal For:</p>
+                <div className="flex items-center justify-center gap-4 flex-wrap">
+                  {user?.role === "vendor" && (
+                    <Button
+                      onClick={() => handleNavigate("vendor-home")}
+                      variant="outline"
+                      className="border-white/60 text-white hover:bg-white hover:text-[#FF8C00] px-6 py-6 rounded-lg backdrop-blur-sm bg-white/10 flex items-center gap-2"
+                    >
+                      <Store className="w-5 h-5" />
+                      <div className="flex flex-col items-start">
+                        <span>Vendor Dashboard</span>
+                        <span className="text-xs text-white/80">
+                          Manage your restaurant
+                        </span>
+                      </div>
+                    </Button>
+                  )}
+                  {user?.role === "admin" && (
+                    <Button
+                      onClick={() => handleNavigate("admin")}
+                      variant="outline"
+                      className="border-white/60 text-white hover:bg-white hover:text-[#FF8C00] px-6 py-6 rounded-lg backdrop-blur-sm bg-white/10 flex items-center gap-2"
+                    >
+                      <Shield className="w-5 h-5" />
+                      <div className="flex flex-col items-start">
+                        <span>Admin Dashboard</span>
+                        <span className="text-xs text-white/80">
+                          Platform management
+                        </span>
+                      </div>
+                    </Button>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </section>
 
